@@ -1,6 +1,6 @@
-##USE VENV TO RUN THE SCRIPT##
+## USE VENV TO RUN THE SCRIPT
 
-###How to load requirements###
+### How to load requirements
 To use the requirements execute the following commands:
 ````
 python -m venv .venv
