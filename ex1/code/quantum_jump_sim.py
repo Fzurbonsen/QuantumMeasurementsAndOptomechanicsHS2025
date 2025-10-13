@@ -104,6 +104,7 @@ def quantum_jump_simulator(e_state_0, g_state_0, g, omega, delta_t, tmax):
 
     plt.tight_layout()  # adjust spacing
     plt.show()
+    plt.savefig('./plot.png')
 
 
 def main():
