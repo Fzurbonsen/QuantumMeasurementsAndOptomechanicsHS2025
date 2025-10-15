@@ -1,3 +1,11 @@
+#
+# qunatim_jumps_sim.py:
+# This file holds the implementation of a simple two state system with a Rabi drive that is measured with a continuous ancilla stream.
+# This simulation was written within the scope of the Quantum Measurements and Optomechanics lecture by Martin Frimmer at ETHZ.
+# Author: Frederic zur Bonsen
+# E-Mail: <fzurbonsen@ethz.ch>
+#
+
 import numpy as np
 import pandas as pd
 import cmath as ma
@@ -103,8 +111,10 @@ def quantum_jump_simulator(e_state_0, g_state_0, g, omega, delta_t, tmax):
     axes[1].grid(True)
 
     plt.tight_layout()  # adjust spacing
-    plt.show()
+    # plt.show()
     plt.savefig('./plot.png')
+
+    plt.close()
 
 
 def main():
