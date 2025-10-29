@@ -78,8 +78,8 @@ def psd_model(f, a, R, noise):
 
 # function to fit the PSD
 def fit_psd(freqs, psd_avg):
-    f = freqs[1:]
-    P = psd_avg[1:]
+    f = freqs[1:] # skip 0
+    P = psd_avg[1:] # skip 0
 
     popt, pcov = curve_fit(psd_model, f, P, p0=[1, 1e3, 1e-14]) # use scipy curve_fit to fit the curve to our PSD model
     a_fit, R_fit, noise_fit = popt
