@@ -190,7 +190,6 @@ def main():
 
     n_phonon = calc_phonon_population(f, psd_real, popt)
     print(f"Estimated phonon population: n = {n_phonon:.2f}")
-    
     return 0
 
 
