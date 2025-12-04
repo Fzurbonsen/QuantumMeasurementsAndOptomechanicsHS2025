@@ -31,8 +31,8 @@ dt = 1 / f_sample # discrete time step
 
 # data paramters
 raw_data_file = "data/ix_csv_50x1mio.txt"
-# raw_data = None
-raw_data = pd.read_csv(raw_data_file, header=None)
+raw_data = None
+# raw_data = pd.read_csv(raw_data_file, header=None)
 
 mean_PSD_data_file = "data/mean_psd.csv"
 mean_PSD_data = None
@@ -303,6 +303,7 @@ power spectrum of −→X and, for comparison, that of X̄ from Problem (g).
 
 def exercise_k():
   print("exercise k)")
+  global predictive_filter_mean_PSD_data
   '''
   This function assumes that predictive_filter_data is populated
   '''
@@ -361,8 +362,8 @@ def exercise_l():
 '''
 
 def main():
-  exercise_f()
-  exercise_g()
+  # exercise_f()
+  # exercise_g()
   exercise_h()
   exercise_i()
   exercise_j()
