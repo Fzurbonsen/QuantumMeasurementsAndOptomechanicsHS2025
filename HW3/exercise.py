@@ -32,7 +32,7 @@ dt = 1 / f_sample # discrete time step
 # data paramters
 raw_data_file = "data/ix_csv_50x1mio.txt"
 raw_data = None
-# raw_data = pd.read_csv(raw_data_file, header=None)
+raw_data = pd.read_csv(raw_data_file, header=None)
 
 mean_PSD_data_file = "data/mean_psd.csv"
 mean_PSD_data = None
@@ -85,6 +85,13 @@ def predictive_filter(i_x):
     dW = i_x[k] * dt - 2 * np.sqrt(Gamma_meas) * X[k] * dt
     X[k+1] = X[k] - (Gamma/2) * X[k] * dt + (2 * np.sqrt(Gamma_meas) * Vc_bar) * dW
   return X
+
+
+# function to compute power spectral filter |H(f)|^2
+def power_spectral_filter(f):
+  omega = 2*np.pi*f
+  H = (4*Gamma_meas*Vc_bar**2) / ((Gamma/2 + 4*Gamma_meas*Vc_bar)**2 + omega**2)
+  return H
 
 
 '''
@@ -279,6 +286,10 @@ def exercise_i():
   print(f"Mean variance of the predictive filter (⟨X^2⟩): {mean_variance}")
   return
 
+'''
+Mean variance = 17.687109413264082
+'''
+
 
 '''
 Exercise j):
@@ -287,6 +298,7 @@ conditional state variance Vc and the unconditional variance Vuc.
 Which relation do you expect? Does the data match your expectation?
 '''
 
+# function implementing exercise j)
 def exercise_j():
   print("exercise j)")
   '''
@@ -301,6 +313,7 @@ isualize the filtering process in the spectral domain. Plot the
 power spectrum of −→X and, for comparison, that of X̄ from Problem (g).
 '''
 
+# function implementing exercise k)
 def exercise_k():
   print("exercise k)")
   global predictive_filter_mean_PSD_data
@@ -325,7 +338,7 @@ def exercise_k():
       "Mean_PSD": mean_PSD
     })
 
-    df_mean_PSD.to_csv(predictive_filter_data_file)
+    df_mean_PSD.to_csv(predictive_filter_mean_PSD_data_file)
 
     predictive_filter_mean_PSD_data = df_mean_PSD
 
@@ -333,7 +346,7 @@ def exercise_k():
   Continue with the mean_PSD_data.
   '''
   # plot the mean psd
-  plt.loglog(mean_PSD_data["Frequency"], mean_PSD_data["Mean_PSD"])
+  plt.loglog(predictive_filter_mean_PSD_data["Frequency"], predictive_filter_mean_PSD_data["Mean_PSD"])
   plt.xlabel("Frequency [Hz]")
   plt.ylabel("PSD")
   plt.grid(True)
@@ -349,10 +362,32 @@ Derive the spectral filtering function corresponding to the temporal
 filter defined by Eq. (2) and add it to your plot from Problem (k).
 '''
 
+# function implementing exercise l)
 def exercise_l():
   print("exercise l)")
-  return
+  global predictive_filter_mean_PSD_data
+  '''
+  This function assumes that predictive_filter_mean_PSD_data is populated
+  '''
+  f = predictive_filter_mean_PSD_data["Frequency"].values
+  H = []
 
+  for freq in f:
+    H_ = power_spectral_filter(freq)
+    H.append(H_)
+
+  H = np.array(H)
+
+  plt.loglog(f, predictive_filter_mean_PSD_data["Mean_PSD"], label="Mean PSD")
+  plt.loglog(f, H, label="Filter |H(f)|²")
+  plt.xlabel("Frequency [Hz]")
+  plt.ylabel("PSD")
+  plt.legend()
+  plt.grid(True)
+  plt.savefig("img/exercise_l.eps")
+  plt.savefig("img/exercise_l.png", dpi=300)
+  plt.show()
+  return
 
 
 '''
@@ -364,9 +399,9 @@ def exercise_l():
 def main():
   # exercise_f()
   # exercise_g()
-  exercise_h()
-  exercise_i()
-  exercise_j()
+  # exercise_h()
+  # exercise_i()
+  # exercise_j()
   exercise_k()
   exercise_l()
   return
