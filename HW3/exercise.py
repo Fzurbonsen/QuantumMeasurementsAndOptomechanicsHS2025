@@ -31,8 +31,7 @@ dt = 1 / f_sample # discrete time step
 
 # data paramters
 raw_data_file = "data/ix_csv_50x1mio.txt"
-raw_data = pd.read_csv(raw_data_file)
-raw_data_trace_1 = pd.read_csv(raw_data_file, nrows=1)
+# raw_data = pd.read_csv(raw_data_file, header=None)
 
 mean_PSD_data_file = "data/mean_psd.csv"
 mean_PSD_data = None
@@ -43,6 +42,11 @@ predictive_filter_data_file = "data/predictive_filter.csv"
 predictive_filter_data = None
 if os.path.exists(predictive_filter_data_file):
   predictive_filter_data = pd.read_csv(predictive_filter_data_file)
+
+predictive_filter_mean_PSD_data_file = "data/predictive_filter_mean_psd.csv"
+predictive_filter_mean_PSD_data = None
+if os.path.exists(predictive_filter_mean_PSD_data_file):
+  predictive_filter_mean_PSD_data = pd.read_csv(predictive_filter_mean_PSD_data_file)
 
 
 
@@ -60,19 +64,12 @@ def get_X_bar(i_x):
 
 
 # function to compute the power spectral density
-def compute_PSD(X_bar, fs):
+def compute_PSD(X, fs):
   N = len(X_bar)
-  Xf = np.fft.rfft(X_bar) # one sided FFT
+  Xf = np.fft.rfft(X) # one sided FFT
   PSD = (np.abs(Xf)**2) / (N * fs) # scale PSD
   f = np.fft.rfftfreq(N, 1/fs) # build frequency axis
   return PSD, f
-
-
-# lambda function to compute discretized Wiener increment
-dW_k = lambda k, i_x, A, X, dt : i_x[k] * dt - A * X[k] * dt
-
-# lambda function to compute discretized predictive increment
-dX_k = lambda k, gamma, A, X, dt, dW : -gamma * X[k] * dt + A * dW
 
 
 # function to compute the predictive filtering on a single trace
@@ -84,8 +81,8 @@ def predictive_filter(i_x):
   We intizialize at 0. Therefore X[0] = 0
   '''
   for k in range(N-1):
-    dW = dW_k(k, i_x, 2 * np.sqrt(Gamma_meas), X, dt)
-    X[k+1] = X[k] + dX_k(k, Gamma/2, 2 * np.sqrt(Gamma_meas) * Vc_bar, X, dt, dW)
+    dW = i_x[k] * dt - 2 * np.sqrt(Gamma_meas) * X[k] * dt
+    X[k+1] = X[k] - (Gamma/2) * X[k] * dt + (2 * np.sqrt(Gamma_meas) * Vc_bar) * dW
   return X
 
 
@@ -137,7 +134,7 @@ def exercise_f():
   return
 
 '''
-The calibration factor is 2*sqrt(Gamma_meas) = 0.489897949
+The calibration factor is 2*sqrt(Gamma_meas) = 0.4898979485566356
 '''
 
 
@@ -290,6 +287,7 @@ Which relation do you expect? Does the data match your expectation?
 '''
 
 def exercise_j():
+  print("exercise j)")
   '''
   Nothing to be done
   '''
@@ -303,6 +301,43 @@ power spectrum of −→X and, for comparison, that of X̄ from Problem (g).
 '''
 
 def exercise_k():
+  print("exercise k)")
+  '''
+  This function assumes that predictive_filter_data is populated
+  '''
+  PSD_list = []
+
+  if predictive_filter_mean_PSD_data is None:
+    for idx in range(len(predictive_filter_data)):
+      X_arrow = predictive_filter_data.iloc[idx].values
+      PSD, f = compute_PSD(X_arrow, f_sample)
+      PSD_list.append(PSD)
+
+    # compute the mean of the PSDs
+    PSD_array = np.array(PSD_list)
+    mean_PSD = PSD_array.mean(axis=0)
+
+    # convert to DataFrame
+    df_mean_PSD = pd.DataFrame({
+      "Frequency": f,
+      "Mean_PSD": mean_PSD
+    })
+
+    df_mean_PSD.to_csv(predictive_filter_data_file)
+
+    predictive_filter_mean_PSD_data = df_mean_PSD
+
+  '''
+  Continue with the mean_PSD_data.
+  '''
+  # plot the mean psd
+  plt.loglog(mean_PSD_data["Frequency"], mean_PSD_data["Mean_PSD"])
+  plt.xlabel("Frequency [Hz]")
+  plt.ylabel("PSD")
+  plt.grid(True)
+  plt.savefig("img/exercise_k.eps")
+  plt.savefig("img/exercise_k.png", dpi=300)
+  plt.show()
   return
 
 
@@ -313,6 +348,7 @@ filter defined by Eq. (2) and add it to your plot from Problem (k).
 '''
 
 def exercise_l():
+  print("exercise l)")
   return
 
 
@@ -324,9 +360,13 @@ def exercise_l():
 '''
 
 def main():
-  # exercise_f()
-  # exercise_g()
+  exercise_f()
+  exercise_g()
   exercise_h()
+  exercise_i()
+  exercise_j()
+  exercise_k()
+  exercise_l()
   return
 
 
