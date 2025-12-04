@@ -31,7 +31,8 @@ dt = 1 / f_sample # discrete time step
 
 # data paramters
 raw_data_file = "data/ix_csv_50x1mio.txt"
-# raw_data = pd.read_csv(raw_data_file, header=None)
+# raw_data = None
+raw_data = pd.read_csv(raw_data_file, header=None)
 
 mean_PSD_data_file = "data/mean_psd.csv"
 mean_PSD_data = None
@@ -65,7 +66,7 @@ def get_X_bar(i_x):
 
 # function to compute the power spectral density
 def compute_PSD(X, fs):
-  N = len(X_bar)
+  N = len(X)
   Xf = np.fft.rfft(X) # one sided FFT
   PSD = (np.abs(Xf)**2) / (N * fs) # scale PSD
   f = np.fft.rfftfreq(N, 1/fs) # build frequency axis
