@@ -94,6 +94,7 @@ def power_spectral_filter(f):
   return H
 
 
+
 '''
 *************
 * Exercises *
@@ -112,6 +113,10 @@ What is the calibration factor?
 # function implementing exercise f)
 def exercise_f():
   print("exercise f)")
+  '''
+  This function assumes that the raw_data DataFrame is populated.
+  '''
+
   i_x = raw_data.iloc[0].values # get the first time trace
   t_window_start = 46e3 # starting time of the window
   t_window_end = 47e3 # end time of the window
@@ -158,6 +163,9 @@ Use a double logarithmic plot and discuss salient features.
 def exercise_g():
   print("exercise g)")
   global mean_PSD_data
+  '''
+  This function assumes that the raw_data DataFrame is populated.
+  '''
 
   '''
   This part of the code only has to be executed once to produce the mean PSD file.
@@ -214,6 +222,9 @@ Describe what you observe.
 # function implementing exercise h)
 def exercise_h():
   print("exercise h)")
+  '''
+  This function assumes that the raw_data DataFrame is populated.
+  '''
   global predictive_filter_data
   
   '''
@@ -397,11 +408,11 @@ def exercise_l():
 '''
 
 def main():
-  # exercise_f()
-  # exercise_g()
-  # exercise_h()
-  # exercise_i()
-  # exercise_j()
+  exercise_f()
+  exercise_g()
+  exercise_h()
+  exercise_i()
+  exercise_j()
   exercise_k()
   exercise_l()
   return
