@@ -136,7 +136,7 @@ def exercise_f():
 
   # plot
   plt.plot(t, X_bar)
-  plt.xlabel("time [10^3 s]")
+  plt.xlabel("Time [1e3 s]")
   plt.ylabel("X̄")
   plt.grid(True)
   plt.savefig("img/exercise_f.eps")
@@ -265,7 +265,7 @@ def exercise_h():
 
   # plot
   plt.plot(t, X_arrow_window)
-  plt.xlabel("time [10^3 s]")
+  plt.xlabel("Time [1e3 s]")
   plt.ylabel("X_arrow")
   plt.grid(True)
   plt.savefig("img/exercise_h.eps")
