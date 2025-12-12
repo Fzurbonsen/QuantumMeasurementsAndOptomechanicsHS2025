@@ -259,11 +259,21 @@ def exercise_h():
 
   # construct window
   X_arrow_window = X_arrow[window_start:window_end]
+  
+  # plot raw data
+  i_x = raw_data.iloc[0].values # get the first time trace
+
+  # construct window
+  i_x_window = i_x[window_start:window_end]
+
+  # convert to X_bar
+  X_bar = get_X_bar(i_x_window)
 
   # build time axis
   t = np.arange(window_start, window_end) / f_sample / 1e3
 
   # plot
+  plt.plot(t, X_bar)
   plt.plot(t, X_arrow_window)
   plt.xlabel("Time [1e3 s]")
   plt.ylabel("X_arrow")
