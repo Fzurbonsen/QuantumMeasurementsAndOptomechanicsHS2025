@@ -26,7 +26,8 @@ Gamma_qb = 1e-1 # measurement backaction rate = 0.1Hz
 eta_d = 0.6 # quantum efficiency = 0.6
 Gamma = 1e-2 # oscillator damping rate = 0.01Hz
 Gamma_meas = eta_d * Gamma_qb # measurement rate
-Vc_bar = (n_bar + 0.5) + (Gamma_qb/Gamma) # steady state of the conditional state variance
+# Vc_bar = (n_bar + 0.5) + (Gamma_qb/Gamma) # steady state of the conditional state variance
+Vc_bar = (-Gamma + np.sqrt(Gamma**2 + 16*Gamma_meas * (Gamma*(n_bar + 0.5) + Gamma_qb))) / (8 * Gamma_meas)
 dt = 1 / f_sample # discrete time step
 
 # data paramters
@@ -398,6 +399,10 @@ def exercise_l():
     H.append(H_)
 
   H = np.array(H)
+
+  f_cutoff = (Gamma/2) + (4*Gamma_meas*(Vc_bar**2))
+
+  print(f"cutoff frequency: {f_cutoff}")
 
   plt.loglog(f, predictive_filter_mean_PSD_data["Mean_PSD"], label="Mean PSD")
   plt.loglog(f, H, label="Filter |H(f)|²")
